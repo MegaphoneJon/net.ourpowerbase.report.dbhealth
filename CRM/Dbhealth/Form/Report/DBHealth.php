@@ -51,7 +51,7 @@ class CRM_Dbhealth_Form_Report_DBHealth extends CRM_Report_Form {
     }
 
     $this->_exposeContactID = FALSE;
-    $drupal_roles = $this->getCmsRoles();
+    $cms_roles = $this->getCmsRoles();
     $this->activityTypes = CRM_Core_PseudoConstant::activityType(TRUE, TRUE);
     asort($this->activityTypes);
 
@@ -160,21 +160,21 @@ class CRM_Dbhealth_Form_Report_DBHealth extends CRM_Report_Form {
         ),
         'grouping'  => 'user-fields',
       ),
-      'drupal_role' => array(
+      'cms_role' => array(
         'dao' => 'CRM_Contact_DAO_Contact',
         'fields'  => array(
           'name' => array(
             'title' => ts('Role'),
-            'dbAlias'  => 'GROUP_CONCAT(drupal_role.name)',
+            'dbAlias'  => 'GROUP_CONCAT(cms_role.name)',
           ),
         ),
         'filters' => array(
           'rid' => array(
             'title' => ts('User Role'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
-            'options' => $drupal_roles,
-            'alias' => 'drupal_role',
-            'dbAlias' => 'drupal_role.rid',
+            'options' => $cms_roles,
+            'alias' => 'cms_role',
+            'dbAlias' => 'cms_role.rid',
           ),
         ),
         'grouping' => 'user-fields',
@@ -223,7 +223,7 @@ class CRM_Dbhealth_Form_Report_DBHealth extends CRM_Report_Form {
       'drupal_users_username',
       'drupal_users_uid',
       'drupal_users_access',
-      'drupal_role_name'
+      'cms_role_name'
     );
     foreach ($this->_columns as $tableName => $table) {
       if (array_key_exists('fields', $table)) {
@@ -264,8 +264,8 @@ class CRM_Dbhealth_Form_Report_DBHealth extends CRM_Report_Form {
       ON civicrm_uf_match.uf_id = drupal_users.uid
       LEFT JOIN `$this->_cmsDbName`.users_roles drupal_users_roles
       ON drupal_users.uid = drupal_users_roles.uid
-      LEFT JOIN `$this->_cmsDbName`.role drupal_role
-      ON drupal_users_roles.rid = drupal_role.rid
+      LEFT JOIN `$this->_cmsDbName`.role cms_role
+      ON drupal_users_roles.rid = cms_role.rid
     ";
 
   }
@@ -317,7 +317,7 @@ class CRM_Dbhealth_Form_Report_DBHealth extends CRM_Report_Form {
     }
     // The real $_where clause includes all users that are enabled and is not modifiable by the user.
     // (Exclude admin and civicron users from query.  No need to include non-active users.)
-    $this->_where = " WHERE drupal_users.name != 'admin' AND drupal_users.name != 'civicron' AND drupal_users.status = 1 ";
+    $this->_where = " WHERE drupal_users.name != 'iiiiadmin' AND drupal_users.name != 'civicron' AND drupal_users.status = 1 ";
     if(count($clauses) > 0) {
       $this->_where .= ' AND ' . implode(' AND ', $clauses) . ' ';
     }
