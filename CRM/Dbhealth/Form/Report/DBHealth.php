@@ -16,7 +16,7 @@ class CRM_Dbhealth_Form_Report_DBHealth extends CRM_Report_Form {
   protected $_cms = NULL;
   protected $_cmsDbName = NULL;
 
-  function getCmsRoles($cms, $cmsDbName) {
+  function getCmsRoles() {
     $cms = $this->_cms;
     $cmsDbName = $this->_cmsDbName;
 
