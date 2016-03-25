@@ -260,11 +260,11 @@ class CRM_Dbhealth_Form_Report_DBHealth extends CRM_Report_Form {
     $this->_from = "
       FROM civicrm_contact {$this->_aliases['civicrm_contact']}
       INNER JOIN civicrm_uf_match ON {$this->_aliases['civicrm_contact']}.id = civicrm_uf_match.contact_id
-      LEFT JOIN users drupal_users
+      LEFT JOIN `$this->_cmsDbName`.users drupal_users
       ON civicrm_uf_match.uf_id = drupal_users.uid
-      LEFT JOIN users_roles drupal_users_roles
+      LEFT JOIN `$this->_cmsDbName`.users_roles drupal_users_roles
       ON drupal_users.uid = drupal_users_roles.uid
-      LEFT JOIN role drupal_role
+      LEFT JOIN `$this->_cmsDbName`.role drupal_role
       ON drupal_users_roles.rid = drupal_role.rid
     ";
 
