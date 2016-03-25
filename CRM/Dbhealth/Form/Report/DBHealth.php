@@ -27,14 +27,14 @@ CRM_Core_Error::debug('cms', $cms);
     }
     if ($cms == 'WordPress') {
       require_once ABSPATH . WPINC . '/pluggable.php';
-      $roles = get_editable_roles();
-      $roleList = ''; 
-      foreach ($roles as $k=>$role) {
-        $roleList[] = $role['name'];
+      $wp_roles = get_editable_roles();
+      $roles = ''; 
+      foreach ($wp_roles as $k=>$role) {
+        $roles[] = $role['name'];
       }   
 $users = get_users();
     }   
-CRM_Core_Error::debug('cms', $cms);
+CRM_Core_Error::debug('roles', $roles);
 return $roles;
   }
 
