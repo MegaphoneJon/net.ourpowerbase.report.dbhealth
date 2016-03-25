@@ -15,7 +15,6 @@ class CRM_Dbhealth_Form_Report_DBHealth extends CRM_Report_Form {
 
   function getCmsRoles($cms, $cmsDbName) {
 
-CRM_Core_Error::debug('cms', $cms);
     if ($cms == 'Drupal' || $cms == 'Drupal8' || $cms == 'Drupal6' || $cms == 'Backdrop') {
       $drupal_roles = array();
       $drupal_roles_query = "SELECT * FROM $cmsDbName.role";
@@ -32,9 +31,7 @@ CRM_Core_Error::debug('cms', $cms);
       foreach ($wp_roles as $k=>$role) {
         $roles[] = $role['name'];
       }   
-$users = get_users();
     }   
-CRM_Core_Error::debug('roles', $roles);
 return $roles;
   }
 
@@ -49,15 +46,6 @@ return $roles;
     }
 
     $this->_exposeContactID = FALSE;
-    //Set Drupal roles for filtering
-/*    $drupal_roles = array();
-    $drupal_roles_query = "SELECT * FROM $cmsDbName.role";
-    $drupal_roles_dao = CRM_Core_DAO::executeQuery($drupal_roles_query, CRM_Core_DAO::$_nullArray);
-    while ($drupal_roles_dao->fetch()) {
-      $drupal_roles[$drupal_roles_dao->rid] = $drupal_roles_dao->name;
-    }
-    CRM_Core_Error::debug('drupal_roles', $drupal_roles);
-*/
     $drupal_roles = $this->getCmsRoles($cms, $cmsDbName);
     $this->activityTypes = CRM_Core_PseudoConstant::activityType(TRUE, TRUE);
     asort($this->activityTypes);
