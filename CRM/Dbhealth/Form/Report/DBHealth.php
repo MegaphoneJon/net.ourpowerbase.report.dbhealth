@@ -13,7 +13,12 @@ class CRM_Dbhealth_Form_Report_DBHealth extends CRM_Report_Form {
   // alterDisplay
   protected $_totals_where_clause = NULL;
 
+  protected $_cms = NULL;
+  protected $_cmsDbName = NULL;
+
   function getCmsRoles($cms, $cmsDbName) {
+    $cms = $this->_cms;
+    $cmsDbName = $this->_cmsDbName;
 
     if ($cms == 'Drupal' || $cms == 'Drupal8' || $cms == 'Drupal6' || $cms == 'Backdrop') {
       $drupal_roles = array();
@@ -32,7 +37,7 @@ class CRM_Dbhealth_Form_Report_DBHealth extends CRM_Report_Form {
         $roles[] = $role['name'];
       }   
     }   
-return $roles;
+  return $roles;
   }
 
 
@@ -41,12 +46,12 @@ return $roles;
     $config = &CRM_Core_Config::singleton();
     if ($config->userFrameworkDSN) {
       $cmsDb = DB::connect($config->userFrameworkDSN);
-      $cmsDbName = $cmsDb->dsn['database'];
-      $cms = $config->userFramework;
+      $this->_cmsDbName = $cmsDb->dsn['database'];
+      $this->_cms = $config->userFramework;
     }
 
     $this->_exposeContactID = FALSE;
-    $drupal_roles = $this->getCmsRoles($cms, $cmsDbName);
+    $drupal_roles = $this->getCmsRoles();
     $this->activityTypes = CRM_Core_PseudoConstant::activityType(TRUE, TRUE);
     asort($this->activityTypes);
 
