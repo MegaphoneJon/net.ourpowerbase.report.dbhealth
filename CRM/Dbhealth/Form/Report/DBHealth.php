@@ -259,14 +259,17 @@ class CRM_Dbhealth_Form_Report_DBHealth extends CRM_Report_Form {
 
     $this->_from = "
       FROM civicrm_contact {$this->_aliases['civicrm_contact']}
-      INNER JOIN civicrm_uf_match ON {$this->_aliases['civicrm_contact']}.id = civicrm_uf_match.contact_id
-      LEFT JOIN `$this->_cmsDbName`.users drupal_users
-      ON civicrm_uf_match.uf_id = drupal_users.uid
-      LEFT JOIN `$this->_cmsDbName`.users_roles drupal_users_roles
-      ON drupal_users.uid = drupal_users_roles.uid
-      LEFT JOIN `$this->_cmsDbName`.role cms_role
-      ON drupal_users_roles.rid = cms_role.rid
-    ";
+      INNER JOIN civicrm_uf_match ON {$this->_aliases['civicrm_contact']}.id = civicrm_uf_match.contact_id";
+      if ($this->_cms == 'Drupal' || 
+          $this->_cms == 'Drupal6' ||
+          $this->_cms == 'Drupal8' ||
+          $this->_cms == 'Backdrop') {
+        $this->_from .= " LEFT JOIN `$this->_cmsDbName`.users drupal_users
+          ON civicrm_uf_match.uf_id = drupal_users.uid
+          LEFT JOIN `$this->_cmsDbName`.users_roles drupal_users_roles
+          ON drupal_users.uid = drupal_users_roles.uid
+          LEFT JOIN `$this->_cmsDbName`.role cms_role
+          ON drupal_users_roles.rid = cms_role.rid";
 
   }
 
