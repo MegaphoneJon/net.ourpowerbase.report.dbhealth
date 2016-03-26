@@ -483,9 +483,10 @@ class CRM_Dbhealth_Form_Report_DBHealth extends CRM_Report_Form {
       // Count activities created
       if (array_key_exists('activity_contact_activity_contact_id', $row)) {
         // NOTE: record_type_id = 2 for created activities
-        $activity_contact_count_sql = "SELECT COUNT(ac.id)
-          FROM civicrm_activity a
-          JOIN civicrm_activity_contact ac ON a.id = ac.activity_id
+        $activity_contact_count_sql = "SELECT COUNT(civicrm_activity_contact.id)
+          FROM civicrm_activity_contact
+          JOIN civicrm_activity activity_civireport
+          ON activity_civireport.id = civicrm_activity_contact.activity_id
           WHERE contact_id = $contact_id AND record_type_id = 2 $this->_activity_where_clause";
         $activity_contact_count = CRM_Core_DAO::singleValueQuery($activity_contact_count_sql);
         $rows[$rowNum]['activity_contact_activity_contact_id'] = $activity_contact_count;
