@@ -142,20 +142,20 @@ class CRM_Dbhealth_Form_Report_DBHealth extends CRM_Report_Form {
         ),
         'grouping'  => 'user-fields',
       ),
-      'drupal_users' => array(
+      'cms_users' => array(
         'dao' => 'CRM_Contact_DAO_Contact',
         'fields' => array(
           'uid' => array(
             'no_display' => TRUE,
-            'dbAlias' => 'drupal_users.uid',
+            'dbAlias' => 'cms_users.uid',
           ),
           'username' => array(
             'title' => ts('Username'),
-            'dbAlias'  => 'drupal_users.name',
+            'dbAlias'  => 'cms_users.name',
           ),
           'access'  => array(
             'title' => ts('Last Access'),
-            'dbAlias'  => 'drupal_users.access',
+            'dbAlias'  => 'cms_users.access',
           ),
         ),
         'grouping'  => 'user-fields',
@@ -220,9 +220,9 @@ class CRM_Dbhealth_Form_Report_DBHealth extends CRM_Report_Form {
     $allowed_fields = array(
       'civicrm_contact_sort_name',
       'civicrm_contact_id',
-      'drupal_users_username',
-      'drupal_users_uid',
-      'drupal_users_access',
+      'cms_users_username',
+      'cms_users_uid',
+      'cms_users_access',
       'cms_role_name'
     );
     foreach ($this->_columns as $tableName => $table) {
@@ -264,13 +264,13 @@ class CRM_Dbhealth_Form_Report_DBHealth extends CRM_Report_Form {
           $this->_cms == 'Drupal6' ||
           $this->_cms == 'Drupal8' ||
           $this->_cms == 'Backdrop') {
-        $this->_from .= " LEFT JOIN `$this->_cmsDbName`.users drupal_users
-          ON civicrm_uf_match.uf_id = drupal_users.uid
-          LEFT JOIN `$this->_cmsDbName`.users_roles drupal_users_roles
-          ON drupal_users.uid = drupal_users_roles.uid
+        $this->_from .= " LEFT JOIN `$this->_cmsDbName`.users cms_users
+          ON civicrm_uf_match.uf_id = cms_users.uid
+          LEFT JOIN `$this->_cmsDbName`.users_roles cms_users_roles
+          ON cms_users.uid = cms_users_roles.uid
           LEFT JOIN `$this->_cmsDbName`.role cms_role
-          ON drupal_users_roles.rid = cms_role.rid";
-
+          ON cms_users_roles.rid = cms_role.rid";
+      }
   }
 
   function where() {
@@ -320,7 +320,7 @@ class CRM_Dbhealth_Form_Report_DBHealth extends CRM_Report_Form {
     }
     // The real $_where clause includes all users that are enabled and is not modifiable by the user.
     // (Exclude admin and civicron users from query.  No need to include non-active users.)
-    $this->_where = " WHERE drupal_users.name != 'iiiiadmin' AND drupal_users.name != 'civicron' AND drupal_users.status = 1 ";
+    $this->_where = " WHERE cms_users.name != 'iiiiadmin' AND cms_users.name != 'civicron' AND cms_users.status = 1 ";
     if(count($clauses) > 0) {
       $this->_where .= ' AND ' . implode(' AND ', $clauses) . ' ';
     }
@@ -480,17 +480,17 @@ class CRM_Dbhealth_Form_Report_DBHealth extends CRM_Report_Form {
         $rows[$rowNum]['assigned_contact_assigned_contact_id'] = $assigned_contact_count;
       }
 
-      if (array_key_exists('drupal_users_name', $row) &&
-         array_key_exists('drupal_users_uid', $row)) {
-        $user_url = CRM_Utils_System::url('user/' . $row['drupal_users_uid']);
-        $rows[$rowNum]['drupal_users_name_link' ] = $user_url;
-        $rows[$rowNum]['drupal_users_name_hover'] = ts("View User Account details for this contact");
-        unset($rows[$rowNum]['drupal_users_uid']);
+      if (array_key_exists('cms_users_name', $row) &&
+         array_key_exists('cms_users_uid', $row)) {
+        $user_url = CRM_Utils_System::url('user/' . $row['cms_users_uid']);
+        $rows[$rowNum]['cms_users_name_link' ] = $user_url;
+        $rows[$rowNum]['cms_users_name_hover'] = ts("View User Account details for this contact");
+        unset($rows[$rowNum]['cms_users_uid']);
       }
 
-      if (array_key_exists('drupal_users_access', $row)) {
-        $access_date = date('F j, Y', $row['drupal_users_access']);
-        $rows[$rowNum]['drupal_users_access' ] = $access_date;
+      if (array_key_exists('cms_users_access', $row)) {
+        $access_date = date('F j, Y', $row['cms_users_access']);
+        $rows[$rowNum]['cms_users_access' ] = $access_date;
       }
     }
   }
