@@ -31,7 +31,7 @@ class CRM_Dbhealth_Form_Report_DBHealth extends CRM_Report_Form {
     }
     if ($cms == 'WordPress') {
       require_once ABSPATH . WPINC . '/pluggable.php';
-      $wp_roles = get_editable_roles();
+      $wp_roles = wp_roles()->roles;
       $roles = ''; 
       foreach ($wp_roles as $k=>$role) {
         $roles[] = $role['name'];
@@ -270,6 +270,11 @@ class CRM_Dbhealth_Form_Report_DBHealth extends CRM_Report_Form {
           ON cms_users.uid = cms_users_roles.uid
           LEFT JOIN `$this->_cmsDbName`.role cms_role
           ON cms_users_roles.rid = cms_role.rid";
+      }
+      if ($this->_cms == 'WordPress') {
+        $this->_from .= " LEFT JOIN `$this->_cmsDbName`.wp_users cms_users
+        ON civicrm_uf_match.uf_id = cms_users.ID
+        ";
       }
   }
 
