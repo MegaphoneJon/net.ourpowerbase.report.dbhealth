@@ -62,11 +62,15 @@ class CRM_Dbhealth_Form_Report_DBHealth extends CRM_Report_Form {
       $usernameField = 'name';
       $idField = 'uid';
       $accessField = 'access';
+      $roleField = 'rid';
+      $roleDbAlias = 'GROUP_CONCAT(cms_role.name)';
     }
     if ($this->_cms == 'WordPress') {
       $usernameField = 'display_name';
       $idField = 'ID';
       $accessField = 'ID';
+      $roleField = 'meta_value';
+      $roleDbAlias = null;
     }
 
     $this->_columns = array(
@@ -179,7 +183,7 @@ class CRM_Dbhealth_Form_Report_DBHealth extends CRM_Report_Form {
         'fields'  => array(
           'name' => array(
             'title' => ts('Role'),
-            'dbAlias'  => 'GROUP_CONCAT(cms_role.name)',
+            'dbAlias'  => $roleDbAlias,
           ),
         ),
         'filters' => array(
@@ -188,7 +192,7 @@ class CRM_Dbhealth_Form_Report_DBHealth extends CRM_Report_Form {
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'options' => $cms_roles,
             'alias' => 'cms_role',
-            'dbAlias' => 'cms_role.rid',
+            'dbAlias' => "cms_role.$roleField",
           ),
         ),
         'grouping' => 'user-fields',
@@ -285,8 +289,8 @@ class CRM_Dbhealth_Form_Report_DBHealth extends CRM_Report_Form {
       if ($this->_cms == 'WordPress') {
         $this->_from .= " LEFT JOIN `$this->_cmsDbName`.wp_users cms_users
         ON civicrm_uf_match.uf_id = cms_users.ID
-        LEFT JOIN `$this->_cmsDbName`.wp_usermeta cms_usermeta
-        ON cms_users.ID = cms_usermeta.user_id";
+        LEFT JOIN `$this->_cmsDbName`.wp_usermeta cms_role
+        ON cms_users.ID = cms_role.user_id";
       }
   }
 
