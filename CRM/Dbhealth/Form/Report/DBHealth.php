@@ -70,7 +70,7 @@ class CRM_Dbhealth_Form_Report_DBHealth extends CRM_Report_Form {
       $idField = 'ID';
       $accessField = 'ID';
       $roleField = 'meta_value';
-      $roleDbAlias = null;
+      $roleDbAlias = 'cms_role.meta_value';
     }
 
     $this->_columns = array(
