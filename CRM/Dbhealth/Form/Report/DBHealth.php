@@ -327,7 +327,7 @@ class CRM_Dbhealth_Form_Report_DBHealth extends CRM_Report_Form {
     }
     // The real $_where clause includes all users that are enabled and is not modifiable by the user.
     // (Exclude admin and civicron users from query.  No need to include non-active users.)
-    if ($this->_cms == 'Drupal' {
+    if ($this->_cms == 'Drupal') {
       $this->_where = " WHERE cms_users.name != 'iiiiadmin' AND cms_users.name != 'civicron' AND cms_users.status = 1 ";
     }
     if(count($clauses) > 0) {
