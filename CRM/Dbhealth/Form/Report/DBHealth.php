@@ -20,7 +20,7 @@ class CRM_Dbhealth_Form_Report_DBHealth extends CRM_Report_Form {
     $cms = $this->_cms;
     $cmsDbName = $this->_cmsDbName;
 
-    if ($cms == 'Drupal' || $cms == 'Drupal8' || $cms == 'Drupal6' || $cms == 'Backdrop') {
+    if ($cms == 'Drupal') {
       $drupal_roles = array();
       $drupal_roles_query = "SELECT * FROM $cmsDbName.role";
       $drupal_roles_dao = CRM_Core_DAO::executeQuery($drupal_roles_query, CRM_Core_DAO::$_nullArray);
@@ -48,6 +48,10 @@ class CRM_Dbhealth_Form_Report_DBHealth extends CRM_Report_Form {
       $cmsDb = DB::connect($config->userFrameworkDSN);
       $this->_cmsDbName = $cmsDb->dsn['database'];
       $this->_cms = $config->userFramework;
+      // For the purposes of this extension, all Drupal-likes are Drupal.
+      if ($this->_cms == 'Drupal6' || $this->_cms == 'Drupal8' || $this->_cms == 'Backdrop') {
+        $this->_cms = 'Drupal';
+      }
     }
 
     $this->_exposeContactID = FALSE;
@@ -260,10 +264,7 @@ class CRM_Dbhealth_Form_Report_DBHealth extends CRM_Report_Form {
     $this->_from = "
       FROM civicrm_contact {$this->_aliases['civicrm_contact']}
       INNER JOIN civicrm_uf_match ON {$this->_aliases['civicrm_contact']}.id = civicrm_uf_match.contact_id";
-      if ($this->_cms == 'Drupal' || 
-          $this->_cms == 'Drupal6' ||
-          $this->_cms == 'Drupal8' ||
-          $this->_cms == 'Backdrop') {
+      if ($this->_cms == 'Drupal') {
         $this->_from .= " LEFT JOIN `$this->_cmsDbName`.users cms_users
           ON civicrm_uf_match.uf_id = cms_users.uid
           LEFT JOIN `$this->_cmsDbName`.users_roles cms_users_roles
@@ -274,7 +275,8 @@ class CRM_Dbhealth_Form_Report_DBHealth extends CRM_Report_Form {
       if ($this->_cms == 'WordPress') {
         $this->_from .= " LEFT JOIN `$this->_cmsDbName`.wp_users cms_users
         ON civicrm_uf_match.uf_id = cms_users.ID
-        ";
+        LEFT JOIN `$this->_cmsDbName`.wp_usermeta cms_usermeta
+        ON cms_users.ID = cms_usermeta.user_id";
       }
   }
 
