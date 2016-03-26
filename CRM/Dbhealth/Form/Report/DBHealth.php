@@ -58,6 +58,16 @@ class CRM_Dbhealth_Form_Report_DBHealth extends CRM_Report_Form {
     $cms_roles = $this->getCmsRoles();
     $this->activityTypes = CRM_Core_PseudoConstant::activityType(TRUE, TRUE);
     asort($this->activityTypes);
+    if ($this->_cms == 'Drupal') {
+      $usernameField = 'name';
+      $idField = 'uid';
+      $accessField = 'access';
+    }
+    if ($this->_cms == 'WordPress') {
+      $usernameField = 'display_name';
+      $idField = 'ID';
+      $accessField = 'ID';
+    }
 
     $this->_columns = array(
       'civicrm_contact' => array(
@@ -151,15 +161,15 @@ class CRM_Dbhealth_Form_Report_DBHealth extends CRM_Report_Form {
         'fields' => array(
           'uid' => array(
             'no_display' => TRUE,
-            'dbAlias' => 'cms_users.uid',
+            'dbAlias' => "cms_users.$idField",
           ),
           'username' => array(
             'title' => ts('Username'),
-            'dbAlias'  => 'cms_users.name',
+            'dbAlias'  => "cms_users.$usernameField",
           ),
           'access'  => array(
             'title' => ts('Last Access'),
-            'dbAlias'  => 'cms_users.access',
+            'dbAlias'  => "cms_users.$accessField",
           ),
         ),
         'grouping'  => 'user-fields',
