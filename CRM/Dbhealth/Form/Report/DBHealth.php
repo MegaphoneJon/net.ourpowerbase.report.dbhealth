@@ -35,8 +35,8 @@ class CRM_Dbhealth_Form_Report_DBHealth extends CRM_Report_Form {
       $roles = ''; 
       foreach ($wp_roles as $k=>$role) {
         $roles[] = $role['name'];
-      }   
-    }   
+      }
+    }
   return $roles;
   }
 
